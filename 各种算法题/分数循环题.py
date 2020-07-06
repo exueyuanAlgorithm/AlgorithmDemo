@@ -1,4 +1,4 @@
-#coding=utf-8
+# coding=utf-8
 def getLoopNums(num):
     startNum = 1
     yushuList = []
@@ -16,6 +16,7 @@ def getLoopNums(num):
             else:
                 index = yushuList.index(yushu)
                 return len(yushuList[index:])
+
 
 maxLoopNum = -1
 maxLoopNumI = 0
