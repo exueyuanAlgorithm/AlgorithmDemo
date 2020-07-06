@@ -1,5 +1,5 @@
 class Solution:
-    def startHandleP(self, p:str):
+    def startHandleP(self, p: str):
         new_p = ""
         last_item = ""
         for item in p:
@@ -45,8 +45,10 @@ class Solution:
             return False
         return True
 
+s = "acdcb"
+p = "a********"
 
-
-
+# s = "bbaaaabaaaaabbabbabbabbababaabababaabbabaaabbaababababbabaabbabbbbbbaaaaaabaabbbbbabbbbabbabababaaaaa"
+# p = "******aa*bbb*aa*a*bb*ab***bbba*a*babaab*b*aa*a****"
 solution = Solution()
-print(solution.isMatch("acdcb", "a********"))
+print(solution.isMatch(s, p))
