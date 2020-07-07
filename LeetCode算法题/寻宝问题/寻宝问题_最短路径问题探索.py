@@ -132,68 +132,6 @@ class Solution:
                 return -1
             return distance
 
-        minStep = None
-        # 栈里存放的是当前位置，下一个位置的探索点
-        distanceStack = [(start_position, 0)]
-        while distanceStack:
-            currentPosition, nextXulie = distanceStack.pop()
-            if currentPosition == start_position:
-                for i in range(nextXulie, len(stone_position_list)):
-                    distance = distanceDict[(currentPosition, stone_position_list[i])]
-                    if distance is not None:
-                        distanceStack.append((currentPosition, i + 1))
-                        distanceStack.append((stone_position_list[i], 0))
-                        break
-            elif currentPosition in stone_position_list:
-                for i in range(nextXulie, len(gear_position_list)):
-                    if not already_gear_position_list_flag[i][1]:
-                        distance = distanceDict[(currentPosition, gear_position_list[i])]
-                        if distance is not None:
-                            distanceStack.append((currentPosition, i + 1))
-                            distanceStack.append((gear_position_list[i], 0))
-                            already_gear_position_list_flag[i][1] = True
-                            break
-            elif currentPosition in gear_position_list:
-                all_already_gear_flag = True
-                for already_gear_position_flag in already_gear_position_list_flag:
-                    if not already_gear_position_flag[1]:
-                        all_already_gear_flag = False
-                        break
-                isAttend = False
-                if all_already_gear_flag:
-                    distance = distanceDict[(currentPosition, target_position)]
-                    if distance is not None and nextXulie == 0:
-                        isAttend = True
-                        # 找终点
-                        distanceStack.append((currentPosition, nextXulie+1))
-                        distanceStack.append((target_position, 0))
-                        print(distanceStack)
-                        allDistance = self.calculateDistance(distanceStack, distanceDict)
-                        print("距离为:{}".format(allDistance))
-                        if minStep is None:
-                            minStep = allDistance
-                        else:
-                            if allDistance < minStep:
-                                minStep = allDistance
-                        distanceStack.pop()
-                else:
-                    # 找石堆
-                    for i in range(nextXulie, len(stone_position_list)):
-                        distance = distanceDict[(currentPosition, stone_position_list[i])]
-                        if distance is not None:
-                            isAttend = True
-                            distanceStack.append((currentPosition, i + 1))
-                            distanceStack.append((stone_position_list[i], 0))
-                            break
-                if not isAttend:
-                    for already_gear in already_gear_position_list_flag:
-                        if currentPosition == already_gear[0]:
-                            already_gear[1] = False
-
-        if minStep is None:
-            return -1
-        else:
-            return minStep
 
 
 solution = Solution()
