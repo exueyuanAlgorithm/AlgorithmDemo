@@ -108,6 +108,24 @@ class Solution:
             distanceDict[(gear_position, target_position)] = self.minStepFromStartToTarget(maze, gear_position, target_position)
         return distanceDict
 
+    def getMinimalStepsFromAToBRoutC(self, startPosition, targetPosition, routPositionList:list, simplifyDistanceDict):
+        print(routPositionList)
+        if not routPositionList:
+            return simplifyDistanceDict[startPosition, targetPosition]
+
+        miniDistance = -1
+        for routPosition in routPositionList:
+            newRoutPositionList = copy.deepcopy(routPositionList)
+            newRoutPositionList.remove(routPosition)
+            distance1 = simplifyDistanceDict[(startPosition, routPosition)]
+            if distance1 >= 0:
+                distance2 = self.getMinimalStepsFromAToBRoutC(routPosition, targetPosition, newRoutPositionList, simplifyDistanceDict)
+                if distance2 >= 0:
+                    all_distance = distance1 + distance2
+                    if all_distance < miniDistance or miniDistance == -1:
+                        miniDistance = all_distance
+        return miniDistance
+
 
     def minimalSteps(self, maze: list) -> int:
         """
@@ -130,21 +148,21 @@ class Solution:
                     gear_position_list.append((i, j))
         distanceDict = self.getDistanceDict(maze, start_position, target_position, stone_position_list, gear_position_list)
 
-        print(distanceDict)
+        # print(distanceDict)
 
         if not gear_position_list:
             return distanceDict[(start_position, target_position)]
 
         simplifyDistanceDict = self.getSimplifyDistanceDict(distanceDict, start_position, target_position, stone_position_list, gear_position_list)
         print(simplifyDistanceDict)
-
+        return self.getMinimalStepsFromAToBRoutC(start_position, target_position, gear_position_list, simplifyDistanceDict)
 
 
 
 
 
 solution = Solution()
-# solution.minimalSteps(
+# print(solution.minimalSteps(
 #     ["......",
 #      "M....M",
 #      ".M#...",
@@ -153,10 +171,18 @@ solution = Solution()
 #      "...O..",
 #      ".S##O.",
 #      "M#..M.",
-#      "#....."])
-print(solution.minimalSteps(
-    ["S#O", "M.M", "O.T"]
-))
+#      "#....."]))
+print(solution.minimalSteps(["M...M","MS#MM","MM#TO"]))
+# print(solution.minimalSteps(
+#     ["S#O", "M..", "M.T"]
+# ))
+
+# a = tuple({(3, 2), (5, 7)})
+# print(a)
+# b = tuple({(5, 7), (3, 2)})
+# print(a == b)
+#
+# c = {a:"8"}
 
 
 
