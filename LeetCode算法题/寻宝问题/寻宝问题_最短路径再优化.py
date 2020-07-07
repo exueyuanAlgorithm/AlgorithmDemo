@@ -23,6 +23,41 @@ class Solution:
         if dp_already and dp_already[x][y] == 1:
             return False
         return True
+    def minStepFromStartToTargetList(self, maze, startTuple, targetTupleList):
+        """
+        检测从start到各个target的最短步数
+        :param maze:
+        :param startTuple:
+        :param stargetTupleList:
+        :return: [5, 3, 8]
+        """
+        m = len(maze)
+        n = len(maze[0])
+        dp = [[-1] * n for _ in range(m)]
+        dp_already = [[0] * n for _ in range(m)]
+        currentDistance = 0
+        dp[startTuple[0]][startTuple[1]] = 0
+        dp_already[startTuple[0]][startTuple[1]] = 1
+        alreadyHaveDistancePositionList = [startTuple]
+        targetDistanceList = [-1]*len(targetTupleList)
+
+        while alreadyHaveDistancePositionList:
+            alreadyHaveDistancePositionListCopy = []
+            alreadyHaveDistancePositionListCopy.extend(alreadyHaveDistancePositionList)
+            alreadyHaveDistancePositionList.clear()
+            currentDistance += 1
+            for position in alreadyHaveDistancePositionListCopy:
+                for dir in Solution.dirs:
+                    new_position = position[0] + dir[0], position[1] + dir[1]
+                    if self.checkIsValidStep(maze, new_position[0], new_position[1], dp_already):
+                        dp[new_position[0]][new_position[1]] = currentDistance
+                        dp_already[new_position[0]][new_position[1]] = 1
+                        if new_position in targetTupleList:
+                            index = targetTupleList.index(new_position)
+                            if targetDistanceList[index] < 0:
+                                targetDistanceList[index] = currentDistance
+                        alreadyHaveDistancePositionList.append(new_position)
+        return targetDistanceList
 
     def minStepFromStartToTarget(self, maze, startTuple, targetTuple):
         """
@@ -30,7 +65,7 @@ class Solution:
         :param maze 地图 ["S#O", "M..", "M.T"]
         :param startTuple: X的起始点坐标 (0, 1)
         :param targetTuple: Y的目标点坐标 (3, 4)
-        :return:
+        :return: 5
         """
         m = len(maze)
         n = len(maze[0])
@@ -98,16 +133,18 @@ class Solution:
         # 首先起始点到终点的距离
         distanceDict[(start_position, target_position)] = self.minStepFromStartToTarget(maze, start_position, target_position)
         # 计算起始点到每个石堆的距离
-        for stone_position in stone_position_list:
-            distanceDict[(start_position, stone_position)] = self.minStepFromStartToTarget(maze, start_position, stone_position)
+        distanceList = self.minStepFromStartToTargetList(maze, start_position, stone_position_list)
+        for i, stone_position in enumerate(stone_position_list):
+            distanceDict[(start_position, stone_position)] = distanceList[i]
         # 计算所有石堆到M的距离
         for stone_position in stone_position_list:
-            for gear_position in gear_position_list:
-                distance = self.minStepFromStartToTarget(maze, stone_position, gear_position)
-                distanceDict[(gear_position, stone_position)] = distance
+            distanceList = self.minStepFromStartToTargetList(maze, stone_position, gear_position_list)
+            for i, gear_position in enumerate(gear_position_list):
+                distanceDict[(gear_position, stone_position)] = distanceList[i]
         # 计算所有M到target的距离
-        for gear_position in gear_position_list:
-            distanceDict[(gear_position, target_position)] = self.minStepFromStartToTarget(maze, gear_position, target_position)
+        distanceList = self.minStepFromStartToTargetList(maze, target_position, gear_position_list)
+        for i, gear_position in enumerate(gear_position_list):
+            distanceDict[(gear_position, target_position)] = distanceList[i]
         return distanceDict
 
     def getMinimalStepsFromAToBRoutC(self, startPosition, targetPosition, routPositionList:list, simplifyDistanceDict):
