@@ -24,19 +24,9 @@ class Solution:
             return False
         return True
 
-    def checkIsValidStepAndStack(self, maze_array, nextp):
-        x = nextp[0]
-        y = nextp[1]
-        return self.checkIsValidStep(maze_array, x, y)
-
-    def mark(self, maze_array, pos):  # 给迷宫maze的位置pos标"2"表示“倒过了”
-        maze_array[pos[0]][pos[1]] = "2"
-
-    def unmark(self, maze_array, pos):
-        maze_array[pos[0]][pos[1]] = "."
-
     def minStepFromStartToTarget(self, maze, startTuple, targetTuple):
         """
+        检测从start 到 target的最短路径步数
         :param maze 地图 ["S#O", "M..", "M.T"]
         :param startTuple: X的起始点坐标 (0, 1)
         :param targetTuple: Y的目标点坐标 (3, 4)
@@ -134,6 +124,7 @@ class Solution:
 
 
 
+
 solution = Solution()
 # solution.minimalSteps(
 #     ["......",
@@ -148,18 +139,6 @@ solution = Solution()
 print(solution.minimalSteps(
     ["S#O", "M..", "M.T"]
 ))
-# minStep = solution.minStepFromStartToTarget(
-#     ["......",
-#      "M....M",
-#      ".M#...",
-#      "....M.",
-#      "##.TM.",
-#      "...O..",
-#      ".S##O.",
-#      "M#..M.",
-#      "#....."], (6, 1),(1, 5))
-# print(minStep)
-# print(solution.checkIsValidStep(["S#O", "M..", "M.T"], 1, 0))
-# print(solution.minStepFromStartToTarget(["S#O", "...", "M.T"], (0,0),(2,2)))
+
 
 
