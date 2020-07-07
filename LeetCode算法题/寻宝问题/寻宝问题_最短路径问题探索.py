@@ -57,6 +57,39 @@ class Solution:
                         alreadyHaveDistancePositionList.append(new_position)
         return -1
 
+    def getSimplifyDistanceDict(self, distanceDict, start_position, target_position, stone_position_list, gear_position_list):
+        simplifyDistanceDict = {}
+        # 先算起始点到所有机关点的距离
+        for stone_position in stone_position_list:
+            for gear_position in gear_position_list:
+                distance1 = distanceDict[(start_position, stone_position)]
+                distance2 = distanceDict[(gear_position, stone_position)]
+                if distance1 >= 0 and distance2 >= 0:
+                    distance = simplifyDistanceDict.get((start_position, gear_position), -1)
+                    sumDistance = distance1 + distance2
+                    if sumDistance <= distance or distance == -1:
+                        simplifyDistanceDict[(start_position, gear_position)] = sumDistance
+                else:
+                    simplifyDistanceDict[(start_position, gear_position)] = -1
+        # 计算所有机关点到机关点的距离
+        for gear_position_1 in gear_position_list:
+            for gear_position_2 in gear_position_list:
+                for stone_position in stone_position_list:
+                    if gear_position_1 == gear_position_2:
+                        break
+                    distance1 = distanceDict[(gear_position_1, stone_position)]
+                    distance2 = distanceDict[(gear_position_2, stone_position)]
+                    if distance1 >= 0 and distance2 >= 0:
+                        distance = simplifyDistanceDict.get((gear_position_1, gear_position_2), -1)
+                        sumDistance = distance1 + distance2
+                        if sumDistance <= distance or distance == -1:
+                            simplifyDistanceDict[(gear_position_1, gear_position_2)] = sumDistance
+                    else:
+                        simplifyDistanceDict[(gear_position_1, gear_position_2)] = -1
+        # 计算所有机关点到终点的距离
+        for gear_position in gear_position_list:
+            simplifyDistanceDict[(gear_position, target_position)] = distanceDict[(gear_position, target_position)]
+        return simplifyDistanceDict
 
     def getDistanceDict(self, maze, start_position, target_position, stone_position_list, gear_position_list):
         distanceDict = {}
@@ -69,26 +102,11 @@ class Solution:
         for stone_position in stone_position_list:
             for gear_position in gear_position_list:
                 distance = self.minStepFromStartToTarget(maze, stone_position, gear_position)
-                distanceDict[(stone_position, gear_position)] = distance
                 distanceDict[(gear_position, stone_position)] = distance
         # 计算所有M到target的距离
         for gear_position in gear_position_list:
             distanceDict[(gear_position, target_position)] = self.minStepFromStartToTarget(maze, gear_position, target_position)
         return distanceDict
-
-    def calculateDistance(self, distanceStack, distanceDict):
-        """
-        计算距离
-        :param distanceStack:
-        :param distanceDict:
-        :return:
-        """
-        allStep = 0
-        for i, position in enumerate(distanceStack):
-            if i+1 < len(distanceStack):
-                nextPosition = distanceStack[i+1]
-                allStep += distanceDict[(position[0], nextPosition[0])]
-        return allStep
 
 
     def minimalSteps(self, maze: list) -> int:
@@ -100,7 +118,6 @@ class Solution:
         target_position = None
         stone_position_list = []
         gear_position_list = []
-        already_gear_position_list_flag = []
         for i, line in enumerate(maze):
             for j, item_str in enumerate(line):
                 if item_str == "S":
@@ -111,16 +128,17 @@ class Solution:
                     stone_position_list.append((i, j))
                 elif item_str == "M":
                     gear_position_list.append((i, j))
-                    already_gear_position_list_flag.append([(i, j), False])
         distanceDict = self.getDistanceDict(maze, start_position, target_position, stone_position_list, gear_position_list)
 
         print(distanceDict)
 
         if not gear_position_list:
-            distance = distanceDict[(start_position, target_position)]
-            if distance is None:
-                return -1
-            return distance
+            return distanceDict[(start_position, target_position)]
+
+        simplifyDistanceDict = self.getSimplifyDistanceDict(distanceDict, start_position, target_position, stone_position_list, gear_position_list)
+        print(simplifyDistanceDict)
+
+
 
 
 
@@ -137,7 +155,7 @@ solution = Solution()
 #      "M#..M.",
 #      "#....."])
 print(solution.minimalSteps(
-    ["S#O", "M..", "M.T"]
+    ["S#O", "M.M", "O.T"]
 ))
 
 
