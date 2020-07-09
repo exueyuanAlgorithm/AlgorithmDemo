@@ -11,14 +11,16 @@ class Solution(object):
         zhuijia = A[:-1]
         A.extend(zhuijia)
         Alen = len(A)
-        dp = [-1000000]*Alen
+        # 存放内容：目前最大值，最后(n-1)项最大值，最后n-1项占几项
+        dp = [(1, 2, 3)] * Alen
         sumNumList = []
         for i in range(Alen):
             if i == 0:
-                dp[i] = A[0]
+                dp[i] = (A[0], A[0], 1)
                 sumNumList.append(A[i])
                 continue
-            maxNum = max(dp[i-1], sum(sumNumList)+A[i], A[i])
+            maxNum = max(dp[i-1][0], dp[i-1][0]+A[i], dp[i-1][1]+A[i], A[i])
+            maxLastNum = max(A[i], dp[i-1][1] + A[i])
             sumNumList.append(A[i])
             if len(sumNumList) >= AStartLen:
                 sumNumList.pop(0)
