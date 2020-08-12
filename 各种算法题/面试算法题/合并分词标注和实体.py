@@ -5,7 +5,6 @@ def contactNer(sentence, separateWordList, entityWordList):
     wordPosition = 0
     mergeWordList = []
     while wordPosition < len(sentence):
-        separateWordTuple = separateWordList[i]
         entityWordPosition = -1
         entityWordTuple = None
         if j < len(entityWordList):
@@ -21,6 +20,7 @@ def contactNer(sentence, separateWordList, entityWordList):
                 i += 1
             wordPosition += wordNum
         else:
+            separateWordTuple = separateWordList[i]
             mergeWordList.append(separateWordTuple)
             wordPosition += len(separateWordTuple[0])
             i += 1
