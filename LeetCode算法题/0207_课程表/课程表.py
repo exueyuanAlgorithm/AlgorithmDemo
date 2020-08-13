@@ -9,4 +9,4 @@ class Solution(object):
 
         }
         for prerequi in prerequisites:
-            if prerequi[0]
+            pass
