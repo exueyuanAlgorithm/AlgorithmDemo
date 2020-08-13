@@ -1,0 +1,82 @@
+Cypher基础语法
+1：添加标签和节点
+1.1 添加用户
+create(lisi:User)
+1.2 添加用户有属性
+create(wufeiyu:User{id:"feiyu",age:18,name:"杜毅"})
+1.3 添加关系
+create(duyi:User{name:"duyi"}),(xj:User{name:"xj"}),(duyi)-[r:朋友]->(xj)
+
+2:查询
+2.1 查询全部
+match(n:User) return n
+2.2 有条件查询
+match(n:User) where n.name="duyi" return n
+match(n:User{name:"duyi"}) return n
+2.3 关系查询
+match p=()-[r:朋友]-() return p
+2.4 指定查询
+match p=(duyi:User)-[r:朋友]-(xj:User) return p  //不可取
+match p=(n:User)-[r:朋友]-(f:User) where n.name="duyi" and f.name="xj" return p
+3：删除(delete/remove)
+3.1 直接删除没有关系的节点
+create(e:Employee)
+match(n:Employee) delete n
+
+match(n:Person{age:38}) delete n
+3.2 删除带关系的
+match p=()-[r:father]-() delete p
+3.3 删除属性
+match(n:User{name:"杜毅"}) remove n.age return n
+
+作业：
+create(lb:User{name:"刘备"})
+create(zf:User{name:"张飞"})
+create(gy:User{name:"关羽"})
+建立好了节点再创建关系
+match(u:User{name:"刘备"}),(f:User{name:"张飞"}),(m:User{name:"关羽"}) merge (m)-[r:大哥]->(u)
+match(u:User{name:"刘备"}),(f:User{name:"张飞"}),(m:User{name:"关羽"}) merge (f)-[r:二哥]->(m)
+match(u:User{name:"刘备"}),(f:User{name:"张飞"}),(m:User{name:"关羽"}) merge (f)-[r:大哥]->(u)
+
+match p=()-[r:朋友]-() delete p
+match(n:User) delete n
+
+MATCH (r) WHERE id(r) = 41 DETACH DELETE r #删除ID及关系
+
+4 修改
+create(duyi:User{name:"杜毅"})
+create(xj:User{name:"小军"})
+为已经有的节点加关系
+match(n:User{name:"杜毅"}),(f:User{name:"小军"}) merge (n)-[r:好朋友]->(f)
+修改已有的关系
+match(n:User{name:"杜毅"}),(f:User{name:"小军"}) merge (n)-[r1:好朋友]->(f) delete r1 merge (n)-[r2:好兄弟]->(f) return n,f
+4.2 节点修改
+create(zs:User{name:"zhangsan"})
+create(ls:User{name:"李四",age:20})
+create(wu:User{name:"王五",age:30})
+match(n:User) where n.name="zhangsan" set n.name="张三" return n
+
+match(n:User) where n.name="张三" set n.age=18 return n
+
+5:常用的函数
+排序 order by
+match(n:User) return n order by n.age
+limit skip
+match(n:User) return n order by n.age limit 3
+match(n:User) return n order by n.age skip 1
+
+6:查询最短路径
+shortestPath
+6层关系理论
+match p=shortestPath((n:User{name:"杜毅"})-[*..1]-(f:User{name:"小军"})) return p
+
+7:聚集函数
+match(n:User) return count(*)
+match(n:User) return avg(n.age)
+
+
+
+
+
+
+
