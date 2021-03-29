@@ -19,12 +19,6 @@ def list_to_list_node(num_list):
     return head
 
 
-def print_list_node(head):
-    last = head
-    while last:
-        print(last.val)
-        last = last.next
-
 def list_node_to_list(head):
     last = head
     num_list = []
@@ -32,6 +26,12 @@ def list_node_to_list(head):
         num_list.append(last.val)
         last = last.next
     return num_list
+
+def print_list_node(head):
+    last = head
+    while last:
+        print(last.val)
+        last = last.next
 
 
 head = list_to_list_node([3, 2, 5])
