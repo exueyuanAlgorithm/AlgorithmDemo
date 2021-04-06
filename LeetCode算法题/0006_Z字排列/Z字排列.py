@@ -28,6 +28,25 @@ def func(s, z):
     return result
 
 
+class Solution(object):
+    def convert(self, s, numRows):
+        """
+        :type s: str
+        :type numRows: int
+        :rtype: str
+        """
+        if numRows == 1:
+            return s
+        lunhui = (numRows - 1) * 2
+        str_list = [""] * numRows
+        for position, item in enumerate(s):
+            for hangshu in range(numRows):
+                if position % lunhui == hangshu or position % lunhui == lunhui - hangshu:
+                    str_list[hangshu] += item
+        result = "".join(str_list)
+        return result
+
+
 
 
 
