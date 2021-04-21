@@ -1,11 +1,3 @@
-# Definition for singly-linked list.
-class TreeNode(object):
-    def __init__(self, x):
-        self.val = x
-        self.left = None
-        self.right = None
-
-
 def list_to_tree_node(tree_list):
     if not tree_list:
         return None
@@ -60,8 +52,31 @@ def tree_node_to_list(root):
     return result_list
 
 
-root = list_to_tree_node([2, None, 3, 5, 3, 8, 7, None, 6])
-result_list = tree_node_to_list(root)
-print(result_list)
+class TreeNode(object):
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
 
-# print(list_to_tree_node([2, None, 3, 5, 3, 8, 7, None, 6]))
+
+class Solution(object):
+    def insertIntoMaxTree(self, root, val):
+        """
+        :type root: TreeNode
+        :type val: int
+        :rtype: TreeNode
+        """
+        if not root or root.val < val:
+            tmp = TreeNode(val)
+            tmp.left = root
+            return tmp
+        root.right = self.insertIntoMaxTree(root.right, val)
+        return root
+
+
+tree_list = [4, 1, 3, None, None, 2]
+root = list_to_tree_node(tree_list)
+solution = Solution()
+new_root = solution.insertIntoMaxTree(root, 5)
+solution_list = tree_node_to_list(new_root)
+print(solution_list)
