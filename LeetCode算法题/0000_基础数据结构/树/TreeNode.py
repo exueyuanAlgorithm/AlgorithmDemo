@@ -35,29 +35,7 @@ def list_to_tree_node(tree_list):
     return root
 
 
-def tree_node_to_list(root):
-    result_list = []
-    if not root:
-        return result_list
-    node_list = [root]
-    i = 0
-    while i < len(node_list):
-        node = node_list[i]
-        i += 1
-        if node:
-            result_list.append(node.val)
-            node_list.append(node.left)
-            node_list.append(node.right)
-        else:
-            result_list.append(None)
 
-    for j in range(len(result_list) - 1, -1, -1):
-        num = result_list[j]
-        if not num:
-            result_list.pop(j)
-        else:
-            break
-    return result_list
 
 
 root = list_to_tree_node([2, None, 3, 5, 3, 8, 7, None, 6])

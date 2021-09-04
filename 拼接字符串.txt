@@ -1,0 +1,37 @@
+1、要组成最大的长整数，首先，要使每个数字自身得到最大的，这样拼接后才有可能得到最大值。
+如何使每个数字自身取得最大值，那么，可以进行比较，对翻转后的数字和翻转前的数字进行比较。
+取大的值即可。
+2、如何将这些字符进行有效拼接。
+这个时候直接对字符串进行排序即可，不过如何进行排序呢？
+使用贪心算法，如果任意两个值a和b，如果ab拼接比ba拼接起来的数值更大（字符串比较），那么我们会认为a应该排列在b之前。
+另外，这里需要额外处理下0这个字符。
+具体python代码如下：
+import functools
+def contact_nums(num_str_list):
+    """
+    :param nums_str: 原来的数
+    :return: 拼接成的最大的数
+    """
+    # 先将每个字符进行翻转
+    new_num_str_list = []
+    for num_str in num_str_list:
+        split_num = int("".join(reversed(num_str)))
+        if split_num >= int(num_str):
+            new_num_str_list.append(str(split_num))
+        else:
+            new_num_str_list.append(num_str)
+
+    # 然后进行排序
+    def cmp(a, b):
+        if a + b > b + a:
+            return 1
+        elif a + b < b + a:
+            return -1
+        else:
+            return -1
+    sort_result = sorted(new_num_str_list, key=functools.cmp_to_key(cmp), reverse=True)
+    return "".join(sort_result) if sort_result[0] != "0" else "0"
+复杂度分析：
+代码时间复杂度：对每个字符串进行翻转判断的时间复杂度为：O(n),排序的时间复杂度为：O(nlogn)
+空间复杂度：重新使用了new_list, 排序本身的空间复杂度，综合为 O(n)
+
